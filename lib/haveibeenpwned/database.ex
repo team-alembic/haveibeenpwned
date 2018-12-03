@@ -2,27 +2,14 @@ defmodule Haveibeenpwned.Database do
   @moduledoc """
   Context for performing hash database read operations
   """
-  alias Haveibeenpwned.Database.Doorman
-
-  @database_read_length 44
-
-  @doc """
-  Hashes the supplied binary and returns it as a readable Base16 string
-  """
-  def hash_binary(binary) when is_binary(binary) do
-    :sha |> :crypto.hash(binary) |> Base.encode16()
-  end
-
-  def hash_binary(_), do: raise(ArgumentError, "supplied argument must be a valid binary")
+  alias Haveibeenpwned.Database.IO
 
   @doc """
   Reads the specified portion of the haveibeenpwned hash database, beginning
-  from `offset` and continuing up to `@database_read_length`
+  from `offset` and continuing up to the length of an entry
   """
-  def read_portion(offset, length \\ @database_read_length) do
-    with file when is_pid(file) <- GenServer.call(Doorman, :database_handle) do
-      :file.pread(file, offset, length)
-    end
+  def read_portion(offset, length \\ 44) do
+    GenServer.call(IO, {:read_portion, [offset: offset, length: length]})
   end
 
   @doc """
@@ -39,4 +26,13 @@ defmodule Haveibeenpwned.Database do
   defp password_pwned?(hash, original) do
     {:ok, original}
   end
+
+  @doc """
+  Hashes the supplied binary and returns it as a readable Base16 string
+  """
+  def hash_binary(binary) when is_binary(binary) do
+    :sha |> :crypto.hash(binary) |> Base.encode16()
+  end
+
+  def hash_binary(_), do: raise(ArgumentError, "supplied argument must be a valid binary")
 end

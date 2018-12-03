@@ -9,7 +9,7 @@ defmodule Haveibeenpwned.Application do
 
     # Define children to be started
     children = [
-      worker(Haveibeenpwned.Database.Doorman, [])
+      worker(Haveibeenpwned.Database.IO, [])
     ]
 
     # Start the OTP application

@@ -1,4 +1,4 @@
-defmodule Haveibeenpwned.Database.Doorman do
+defmodule Haveibeenpwned.Database.IO do
   @moduledoc """
   A GenServer which keeps the SHA database open for access. State is the file
   handle
@@ -21,6 +21,14 @@ defmodule Haveibeenpwned.Database.Doorman do
   """
   def init(_) do
     :file.open(@database_path, [:binary, :read])
+  end
+
+  @impl true
+  @doc """
+  Reads a portion from the database
+  """
+  def handle_call({:read_portion, [offset: offset, length: length]}, _from, state) do
+    {:reply, "some string", state}
   end
 
   @impl true
