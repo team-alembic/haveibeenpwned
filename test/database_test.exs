@@ -17,16 +17,16 @@ defmodule Haveibeenpwned.Database.Test do
 
   describe "Haveibeenpwned.read_database_portion/2" do
     test "reads the specified portion of the hash database" do
-      assert "A7B8A69578" == Database.read_portion(5, 10)
-      assert ":187" == Database.read_portion(40, 4)
+      assert {:ok, "A7B8A69578"} == Database.read_portion(5, 10)
+      assert {:ok, ":187"} == Database.read_portion(40, 4)
     end
 
     test "returns offset up to EOF if offset extends beyond EOF" do
-      assert "AC03E:122\n" == Database.read_portion(440, 100)
+      assert {:ok, "AC03E:122\n"} == Database.read_portion(440, 100)
     end
 
     test "returns an error tuple when offset is at or beyond EOF" do
-      assert {:error, :eof} = Database.read_portion(600, 1)
+      assert :eof == Database.read_portion(600, 1)
     end
   end
 end

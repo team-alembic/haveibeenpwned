@@ -11,7 +11,7 @@ defmodule Haveibeenpwned.Database.Doorman do
   @doc """
   Start the GenServer with a registered name
   """
-  def start_link() do
+  def start_link do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
@@ -27,7 +27,7 @@ defmodule Haveibeenpwned.Database.Doorman do
   @doc """
   Allow outside processes to fetch the file handle
   """
-  def handle_call(:file_handle, _from, state), do: {:reply, state, state}
+  def handle_call(:database_handle, _from, state), do: {:reply, state, state}
 
   @impl true
   @doc """
