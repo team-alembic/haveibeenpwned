@@ -3,7 +3,7 @@
 ###
 
 # Use a minial Elixir  image
-FROM elixir:1.7.3-alpine
+FROM elixir:1.7.4-alpine
 
 # Configure workspace
 RUN mix local.hex --force
