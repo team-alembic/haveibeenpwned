@@ -12,9 +12,13 @@ defmodule Haveibeenpwned.Database do
   from `offset` and continuing up to `@database_read_length`
   """
   def read_portion(offset, length \\ @database_read_length) do
-    {:ok, file} = :file.open(@database_path, [:binary])
-    {:ok, data} = :file.pread(file, offset, length)
-    :file.close(file)
-    data
+    with {:ok, file} <- :file.open(@database_path, [:binary, :read]),
+         {:ok, data} <- :file.pread(file, offset, length) do
+      :file.close(file)
+      data
+    else
+      :eof -> {:error, :eof}
+      _ -> {:error, :unknown_error}
+    end
   end
 end
