@@ -8,6 +8,12 @@ defmodule Haveibeenpwned.Database do
   @database_read_length 32
 
   @doc """
+  Hashes the supplied binary and returns it as a readable Base16 string
+  """
+  def hash_binary(binary) when is_binary(binary), do: :crypto.hash(:sha, binary) |> Base.encode16()
+  def hash_binary(_), do: raise ArgumentError, "supplied argument must be a valid binary"
+
+  @doc """
   Reads the specified portion of the haveibeenpwned hash database, beginning
   from `offset` and continuing up to `@database_read_length`
   """
