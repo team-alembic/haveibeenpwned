@@ -8,6 +8,8 @@ defmodule Haveibeenpwned.Database.IO do
   @database_relative_path Application.get_env(:haveibeenpwned, :database_relative_path)
   @database_path Application.app_dir(:haveibeenpwned, @database_relative_path)
 
+  @database_entry_length 44
+
   @doc """
   Start the GenServer with a registered name
   """
@@ -27,8 +29,14 @@ defmodule Haveibeenpwned.Database.IO do
   @doc """
   Reads a portion from the database
   """
-  def handle_call({:read_portion, [offset: offset, length: length]}, _from, state) do
-    {:reply, "some string", state}
+  def handle_call({:read_entry, [offset: offset, length: length]}, _from, state) do
+    entry = read_bytes(state, offset, length)
+    {:reply, entry, state}
+  end
+
+  def handle_call({:read_entry, [offset: offset]}, _from, state) do
+    entry = read_bytes(state, offset)
+    {:reply, entry, state}
   end
 
   @impl true
@@ -43,5 +51,9 @@ defmodule Haveibeenpwned.Database.IO do
   """
   def terminate(_reason, state) do
     :file.close(state)
+  end
+
+  defp read_bytes(file, offset, length \\ @database_entry_length) when is_pid(file) do
+    :file.pread(file, offset, length)
   end
 end

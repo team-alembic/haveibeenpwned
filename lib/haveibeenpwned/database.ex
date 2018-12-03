@@ -8,8 +8,8 @@ defmodule Haveibeenpwned.Database do
   Reads the specified portion of the haveibeenpwned hash database, beginning
   from `offset` and continuing up to the length of an entry
   """
-  def read_portion(offset, length \\ 44) do
-    GenServer.call(IO, {:read_portion, [offset: offset, length: length]})
+  def read_entry(offset, length \\ 44) do
+    GenServer.call(IO, {:read_entry, [offset: offset, length: length]})
   end
 
   @doc """
@@ -21,7 +21,9 @@ defmodule Haveibeenpwned.Database do
     password |> hash_binary() |> password_pwned?(password)
   end
 
-  def password_pwned?(_), do: raise(ArgumentError, "supplied password must be a valid binary")
+  def password_pwned?(_) do
+    raise(ArgumentError, "supplied password must be a valid binary")
+  end
 
   defp password_pwned?(hash, original) do
     {:ok, original}
