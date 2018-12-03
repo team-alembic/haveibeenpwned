@@ -13,9 +13,9 @@ defmodule Haveibeenpwned.Database do
   end
 
   @doc """
-  Searches the Haveibeenpwned database for matching hashes. If the supplied
-  password is compromised, returns a `{:warning, count}` tuple. If it is
-  not compromised, returns an `{:ok, password}` tuple.
+  Searches the Haveibeenpwned database for matching hashes via a binary search.
+  If the supplied password is compromised, returns a `{:warning, count}` tuple.
+  If it is not compromised, returns an `{:ok, password}` tuple.
   """
   def password_pwned?(password) when is_binary(password) do
     password |> hash_binary() |> password_pwned?(password)
