@@ -1,10 +1,12 @@
 steps:
   - name: ":elixir: :umbrella: Tests"
     command: "mix test"
-    env:
-      BUILDKITE_DOCKER_COMPOSE_CONTAINER: "app"
+    plugins:
+      docker-compose#v1.8.3:
+        run: app
 
   - name: ":credo: Credo"
     command: "mix credo --strict"
-    env:
-      BUILDKITE_DOCKER_COMPOSE_CONTAINER: "app"
+    plugins:
+      docker-compose#v1.8.3:
+        run: app
