@@ -25,7 +25,7 @@ defmodule Haveibeenpwned.Database do
     raise(ArgumentError, "supplied password must be a valid binary")
   end
 
-  defp password_pwned?(hash, original) do
+  defp password_pwned?(subject, original) do
     {:ok, original}
   end
 
