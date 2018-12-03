@@ -1,0 +1,10 @@
+steps:
+  - name: ":elixir: :umbrella: Tests"
+    command: "mix test"
+    env:
+      BUILDKITE_DOCKER_COMPOSE_CONTAINER: "app"
+
+  - name: ":credo: Credo"
+    command: "mix credo --strict"
+    env:
+      BUILDKITE_DOCKER_COMPOSE_CONTAINER: "app"
