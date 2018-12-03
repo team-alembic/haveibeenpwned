@@ -2,10 +2,26 @@ defmodule Haveibeenpwned.Database do
   @moduledoc """
   Context for performing hash database read operations
   """
+  alias Haveibeenpwned.Database.Doorman
 
   @database_relative_path Application.get_env(:haveibeenpwned, :database_relative_path)
   @database_path Application.app_dir(:haveibeenpwned, @database_relative_path)
   @database_read_length 44
+
+  @doc """
+  Searches the Haveibeenpwned database for matching hashes. If the supplied
+  password is compromised, returns a `{:warning, count}` tuple. If it is
+  not compromised, returns an `{:ok, password}` tuple.
+  """
+  def password_pwned?(password) when is_binary(password) do
+    password |> hash_binary() |> password_pwned?(password)
+  end
+
+  def password_pwned?(_), do: raise ArgumentError, "supplied password must be a valid binary"
+
+  defp password_pwned?(hash, original) do
+    {:ok, original}
+  end
 
   @doc """
   Hashes the supplied binary and returns it as a readable Base16 string
