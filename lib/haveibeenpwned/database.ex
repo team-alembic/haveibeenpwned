@@ -5,7 +5,7 @@ defmodule Haveibeenpwned.Database do
 
   @database_relative_path Application.get_env(:haveibeenpwned, :database_relative_path)
   @database_path Application.app_dir(:haveibeenpwned, @database_relative_path)
-  @database_read_length 32
+  @database_read_length 44
 
   @doc """
   Hashes the supplied binary and returns it as a readable Base16 string
