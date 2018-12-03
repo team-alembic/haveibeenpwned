@@ -11,9 +11,7 @@ defmodule Haveibeenpwned.Database do
   Reads the specified portion of the haveibeenpwned hash database, beginning
   from `offset` and continuing up to `@database_read_length`
   """
-  def read_database_portion(offset, length \\ @database_read_length) do
-    @database_path |> IO.inspect()
-
+  def read_portion(offset, length \\ @database_read_length) do
     {:ok, file} = :file.open(@database_path, [:binary])
     {:ok, data} = :file.pread(file, offset, length)
     :file.close(file)
