@@ -29,8 +29,9 @@ defmodule Haveibeenpwned.Database.IO do
   @doc """
   Reads a portion from the database
   """
-  def handle_call({:read_entry, [offset: offset, length: length]}, _from, state) do
-    entry = read_bytes(state, offset, length)
+  def handle_call({:read_entry, entry_number}, _from, state) when is_integer(entry_number) do
+    offset = entry_number_offset(entry_number)
+    entry = read_bytes(state, offset, @database_entry_length)
     {:reply, entry, state}
   end
 
@@ -46,6 +47,11 @@ defmodule Haveibeenpwned.Database.IO do
   """
   def terminate(_reason, state) do
     :file.close(state)
+  end
+
+  defp entry_number_offset(entry_number) when is_integer(entry_number) do
+    entry_number = entry_number - 1
+    @database_entry_length * entry_number + entry_number
   end
 
   defp read_bytes(file, offset, length) when is_pid(file) do

@@ -19,8 +19,10 @@ defmodule Haveibeenpwned.Database.IOTest do
 
   describe "Haveibeenpwned.Database.IO.handle_call/3" do
     test "reads and entry of a specific offset and length" do
-      {:ok, bytes} = GenServer.call(IO, {:read_entry, [offset: 10, length: 10]})
-      assert "6957822A1A" == bytes
+      {:ok, bytes} = GenServer.call(IO, {:read_entry, 4})
+      assert "34FB3300B9A77BEBDC988EC3EDD0D4A6A42A26F9:522" == bytes
+      {:ok, bytes} = GenServer.call(IO, {:read_entry, 9})
+      assert "E0996A37C13D44C3B06074939D43FA3759BD32C1:127" == bytes
     end
 
     test "allows retrieval of the database file process" do

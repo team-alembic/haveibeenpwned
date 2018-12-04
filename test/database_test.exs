@@ -5,10 +5,10 @@ defmodule Haveibeenpwned.Database.Test do
 
   describe "Haveibeenpwned.Database.read_entry/2" do
     test "reads an entry from the database" do
-      {:ok, bytes} = Database.read_entry(45)
-      assert "11AEE249173E887D331B1878080C2BF8D59CC430:002" == bytes
-      {:ok, bytes} = Database.read_entry(45, 5)
-      assert "11AEE" == bytes
+      {:ok, bytes} = Database.read_entry(1)
+      assert "04053A7B8A6957822A1A10641C094AF04ADC071E:187" == bytes
+      {:ok, bytes} = Database.read_entry(8)
+      assert "DD5D5862925F1F953CAB0DBA448B6B14E371BF53:823" == bytes
     end
   end
 
