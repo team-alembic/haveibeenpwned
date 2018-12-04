@@ -29,6 +29,7 @@ defmodule Haveibeenpwned.Database do
   end
 
   defp password_pwned?(subject, original) do
+    # TODO: perform binary search
     {:ok, original}
   end
 
