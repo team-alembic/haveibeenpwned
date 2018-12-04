@@ -34,11 +34,6 @@ defmodule Haveibeenpwned.Database.IO do
     {:reply, entry, state}
   end
 
-  def handle_call({:read_entry, [offset: offset]}, _from, state) do
-    entry = read_bytes(state, offset)
-    {:reply, entry, state}
-  end
-
   @impl true
   @doc """
   Allow outside processes to fetch the file handle
@@ -53,7 +48,7 @@ defmodule Haveibeenpwned.Database.IO do
     :file.close(state)
   end
 
-  defp read_bytes(file, offset, length \\ @database_entry_length) when is_pid(file) do
+  defp read_bytes(file, offset, length) when is_pid(file) do
     :file.pread(file, offset, length)
   end
 end

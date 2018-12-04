@@ -23,11 +23,6 @@ defmodule Haveibeenpwned.Database.IOTest do
       assert "6957822A1A" == bytes
     end
 
-    test "reads an entry from a specific offset up to a specific length" do
-      {:ok, bytes} = GenServer.call(IO, {:read_entry, [offset: 135]})
-      assert "34FB3300B9A77BEBDC988EC3EDD0D4A6A42A26F9:522" == bytes
-    end
-
     test "allows retrieval of the database file process" do
       pid = GenServer.call(IO, :database_handle)
       assert Process.alive?(pid)

@@ -4,11 +4,14 @@ defmodule Haveibeenpwned.Database do
   """
   alias Haveibeenpwned.Database.IO
 
+  @database_entry_count 10
+  @database_entry_length 44
+
   @doc """
   Reads the specified portion of the haveibeenpwned hash database, beginning
   from `offset` and continuing up to the length of an entry
   """
-  def read_entry(offset, length \\ 44) do
+  def read_entry(offset, length \\ @database_entry_length) do
     GenServer.call(IO, {:read_entry, [offset: offset, length: length]})
   end
 
