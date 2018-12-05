@@ -3,6 +3,7 @@ defmodule Haveibeenpwned.Database do
   Context for performing hash database read operations
   """
   alias Haveibeenpwned.Database.IO
+  require Logger
 
   @database_entry_count 10
   @database_entry_length 44
@@ -11,7 +12,7 @@ defmodule Haveibeenpwned.Database do
   Reads the specified portion of the haveibeenpwned hash database, beginning
   from `offset` and continuing up to the length of an entry
   """
-  def read_entry(number) when is_integer(number)  do
+  def read_entry(number) when is_integer(number) do
     GenServer.call(IO, {:read_entry, number})
   end
 
@@ -29,8 +30,28 @@ defmodule Haveibeenpwned.Database do
   end
 
   defp password_pwned?(subject, original) do
-    # TODO: perform binary search
+    Logger.info(subject)
+    password_pwned?({0, @database_entry_count}, subject, original)
+  end
+
+  defp password_pwned?({st, ed}, _subject, original) when ed - st == 0 do
     {:ok, original}
+  end
+
+  defp password_pwned?({st, ed}, _subject, original) when ed - st == 1 do
+    {:ok, original}
+  end
+
+  defp password_pwned?({st, ed}, subject, original) do
+    middle_index = st + round((ed - st) / 2)
+    Logger.info("#{st} #{middle_index} #{ed}")
+    {:ok, <<hash::bytes-size(40)>> <> ":" <> count} = read_entry(middle_index)
+
+    cond do
+      subject > hash -> password_pwned?({middle_index, ed}, subject, original)
+      subject < hash -> password_pwned?({st, middle_index}, subject, original)
+      subject == hash -> {:warning, String.to_integer(count)}
+    end
   end
 
   @doc """
