@@ -34,12 +34,24 @@ defmodule Haveibeenpwned.Database do
     password_pwned?({0, @database_entry_count}, subject, original)
   end
 
-  defp password_pwned?({st, ed}, _subject, original) when ed - st == 0 do
-    {:ok, original}
+  defp password_pwned?({st, ed}, subject, original) when ed - st == 0 do
+    {:ok, <<hash::bytes-size(40)>> <> ":" <> count} = read_entry(st)
+
+    if subject == hash do
+      {:warning, String.to_integer(count)}
+    else
+      {:ok, original}
+    end
   end
 
-  defp password_pwned?({st, ed}, _subject, original) when ed - st == 1 do
-    {:ok, original}
+  defp password_pwned?({st, ed}, subject, original) when ed - st == 1 do
+    {:ok, <<hash::bytes-size(40)>> <> ":" <> count} = read_entry(ed)
+
+    if subject == hash do
+      {:warning, String.to_integer(count)}
+    else
+      password_pwned?({st, st}, subject, original)
+    end
   end
 
   defp password_pwned?({st, ed}, subject, original) do
