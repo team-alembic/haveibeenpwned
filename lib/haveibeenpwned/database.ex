@@ -4,8 +4,9 @@ defmodule Haveibeenpwned.Database do
   """
   alias Haveibeenpwned.Database.IO
 
+  require Logger
+
   @database_entry_count 10
-  @database_entry_length 44
 
   @doc """
   Reads the specified portion of the haveibeenpwned hash database, beginning
@@ -21,16 +22,23 @@ defmodule Haveibeenpwned.Database do
   If it is not compromised, returns an `{:ok, password}` tuple.
   """
   def password_pwned?(password) when is_binary(password) do
-    password |> hash_binary() |> password_pwned?(password)
+    password |> hash_binary() |> password_pwned?(password, round(@database_entry_count / 2))
   end
 
   def password_pwned?(_) do
     raise(ArgumentError, "supplied password must be a valid binary")
   end
 
-  defp password_pwned?(subject, original) do
-    # TODO: perform binary search
-    {:ok, original}
+  defp password_pwned?(subject, original, index) when is_integer(index) do
+    {:ok, <<sha::bytes-size(40), _colon::bytes-size(1), count::binary>>} = read_entry(index)
+
+    cond do
+      sha == subject -> {:warning, String.to_integer(count)}
+      index == 1 -> {:ok, original}
+      index == @database_entry_count -> {:ok, original}
+      subject < sha -> password_pwned?(subject, original, round(index / 2))
+      subject > sha -> password_pwned?(subject, original, round((index + @database_entry_count) / 2))
+    end
   end
 
   @doc """

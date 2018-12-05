@@ -14,7 +14,7 @@ defmodule Haveibeenpwned.Database.Test do
 
   describe "Haveibeenpwned.Database.password_pwned?/1" do
     test "returns a warning tuple when the password has been pwned" do
-      assert {:warning, 342} = Database.password_pwned?("fourth")
+      assert {:warning, 187} = Database.password_pwned?("sixth")
     end
 
     test "returns an ok tuple when the password has not been pwned" do
