@@ -3,10 +3,8 @@ defmodule Haveibeenpwned.Database do
   Context for performing hash database read operations
   """
   alias Haveibeenpwned.Database.IO
-  require Logger
 
   @database_entry_count 10
-  @database_entry_length 44
 
   @doc """
   Reads the specified portion of the haveibeenpwned hash database, beginning
@@ -30,39 +28,37 @@ defmodule Haveibeenpwned.Database do
   end
 
   defp password_pwned?(subject, original) do
-    Logger.info(subject)
     password_pwned?({0, @database_entry_count}, subject, original)
   end
 
-  defp password_pwned?({st, ed}, subject, original) when ed - st == 0 do
-    {:ok, <<hash::bytes-size(40)>> <> ":" <> count} = read_entry(st)
+  defp password_pwned?({start, ed}, subject, original) when ed - start == 0 do
+    {:ok, <<sha::bytes-size(40), _colon::bytes-size(1), count::binary>>} = read_entry(start)
 
-    if subject == hash do
+    if subject == sha do
       {:warning, String.to_integer(count)}
     else
       {:ok, original}
     end
   end
 
-  defp password_pwned?({st, ed}, subject, original) when ed - st == 1 do
-    {:ok, <<hash::bytes-size(40)>> <> ":" <> count} = read_entry(ed)
+  defp password_pwned?({start, ed}, subject, original) when ed - start == 1 do
+    {:ok, <<sha::bytes-size(40), _colon::bytes-size(1), count::binary>>} = read_entry(ed)
 
-    if subject == hash do
+    if subject == sha do
       {:warning, String.to_integer(count)}
     else
-      password_pwned?({st, st}, subject, original)
+      password_pwned?({start, start}, subject, original)
     end
   end
 
-  defp password_pwned?({st, ed}, subject, original) do
-    middle_index = st + round((ed - st) / 2)
-    Logger.info("#{st} #{middle_index} #{ed}")
-    {:ok, <<hash::bytes-size(40)>> <> ":" <> count} = read_entry(middle_index)
+  defp password_pwned?({start, ed}, subject, original) do
+    middle = start + round((ed - start) / 2)
+    {:ok, <<sha::bytes-size(40), _colon::bytes-size(1), count::binary>>} = read_entry(middle)
 
     cond do
-      subject > hash -> password_pwned?({middle_index, ed}, subject, original)
-      subject < hash -> password_pwned?({st, middle_index}, subject, original)
-      subject == hash -> {:warning, String.to_integer(count)}
+      subject == sha -> {:warning, String.to_integer(count)}
+      subject > sha -> password_pwned?({middle, ed}, subject, original)
+      subject < sha -> password_pwned?({start, middle}, subject, original)
     end
   end
 
