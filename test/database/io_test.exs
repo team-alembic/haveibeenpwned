@@ -12,22 +12,34 @@ defmodule Haveibeenpwned.Database.IOTest do
 
   describe "Haveibeenpwned.Database.IO.init/1" do
     test "sets initial state to the open file handle" do
-      {:ok, pid} = IO.init(:foo)
+      {:ok, {pid, entry_count}} = IO.init(:foo)
       assert Process.alive?(pid)
+      assert entry_count == 10
     end
   end
 
   describe "Haveibeenpwned.Database.IO.handle_call/3" do
     test "reads and entry of a specific offset and length" do
-      {:ok, bytes} = GenServer.call(IO, {:read_entry, 4})
-      assert "34FB3300B9A77BEBDC988EC3EDD0D4A6A42A26F9:522" == bytes
-      {:ok, bytes} = GenServer.call(IO, {:read_entry, 9})
-      assert "E0996A37C13D44C3B06074939D43FA3759BD32C1:127" == bytes
+      {:ok, bytes} = GenServer.call(IO, {:read_entry, 1})
+
+      assert <<4, 5, 58, 123, 138, 105, 87, 130, 42, 26, 16, 100, 28, 9, 74, 240, 74, 220, 7, 30,
+               0, 0, 0, 187>> == bytes
+
+      {:ok, bytes} = GenServer.call(IO, {:read_entry, 2})
+
+      assert <<17, 174, 226, 73, 23, 62, 136, 125, 51, 27, 24, 120, 8, 12, 43, 248, 213, 156, 196,
+               48, 0, 0, 0, 2>> == bytes
     end
 
     test "allows retrieval of the database file process" do
-      pid = GenServer.call(IO, :database_handle)
+      {pid, entry_count} = GenServer.call(IO, :database_handle)
       assert Process.alive?(pid)
+      assert entry_count == 10
+    end
+
+    test "get entry count" do
+      entry_count = GenServer.call(IO, :entry_count)
+      assert entry_count == 10
     end
   end
 end

@@ -4,7 +4,7 @@ defmodule Haveibeenpwned.Database do
   """
   alias Haveibeenpwned.Database.IO
 
-  @database_entry_count 10
+  @database_entry_length 24
 
   @doc """
   Reads the specified portion of the haveibeenpwned hash database, beginning
@@ -12,6 +12,13 @@ defmodule Haveibeenpwned.Database do
   """
   def read_entry(number) when is_integer(number) do
     GenServer.call(IO, {:read_entry, number})
+  end
+
+  @doc """
+  Return the entry count
+  """
+  def entry_count do
+    GenServer.call(IO, :entry_count)
   end
 
   @doc """
@@ -28,24 +35,24 @@ defmodule Haveibeenpwned.Database do
   end
 
   defp password_pwned?(subject, original) do
-    password_pwned?({0, @database_entry_count}, subject, original)
+    password_pwned?({0, entry_count()}, subject, original)
   end
 
   defp password_pwned?({start, ed}, subject, original) when ed - start == 0 do
-    {:ok, <<sha::bytes-size(40), _colon::bytes-size(1), count::binary>>} = read_entry(start)
+    {:ok, <<sha::binary-size(20), count::32>>} = read_entry(start)
 
     if subject == sha do
-      {:warning, String.to_integer(count)}
+      {:warning, count}
     else
       {:ok, original}
     end
   end
 
   defp password_pwned?({start, ed}, subject, original) when ed - start == 1 do
-    {:ok, <<sha::bytes-size(40), _colon::bytes-size(1), count::binary>>} = read_entry(ed)
+    {:ok, <<sha::binary-size(20), count::32>>} = read_entry(ed)
 
     if subject == sha do
-      {:warning, String.to_integer(count)}
+      {:warning, count}
     else
       password_pwned?({start, start}, subject, original)
     end
@@ -53,10 +60,10 @@ defmodule Haveibeenpwned.Database do
 
   defp password_pwned?({start, ed}, subject, original) do
     middle = start + round((ed - start) / 2)
-    {:ok, <<sha::bytes-size(40), _colon::bytes-size(1), count::binary>>} = read_entry(middle)
+    {:ok, <<sha::binary-size(20), count::32>>} = read_entry(middle)
 
     cond do
-      subject == sha -> {:warning, String.to_integer(count)}
+      subject == sha -> {:warning, count}
       subject > sha -> password_pwned?({middle, ed}, subject, original)
       subject < sha -> password_pwned?({start, middle}, subject, original)
     end
@@ -66,8 +73,30 @@ defmodule Haveibeenpwned.Database do
   Hashes the supplied binary and returns it as a readable Base16 string
   """
   def hash_binary(binary) when is_binary(binary) do
-    :sha |> :crypto.hash(binary) |> Base.encode16()
+    :sha |> :crypto.hash(binary)
   end
 
   def hash_binary(_), do: raise(ArgumentError, "supplied argument must be a valid binary")
+
+  @doc """
+  Ingest txt file into binary format
+  """
+  def ingest_file(input_txt_path, output_binary_path) do
+    dest_stream = File.stream!(output_binary_path, [{:delayed_write, 10_000_000, 60}])
+
+    input_txt_path
+    |> File.stream!
+    |> Stream.map(&format_line(&1))
+    |> Stream.into(dest_stream)
+    |> Stream.run()
+  end
+
+  defp format_line(line) do
+    pattern = :binary.compile_pattern(["\n", ":"])
+    [sha_str, count_str] = String.split(line, pattern, trim: true)
+    {:ok, bin_sha} = Base.decode16(sha_str)
+    {count_num, _} = Integer.parse(count_str)
+    bin_count = <<count_num::32>>
+    bin_sha <> bin_count
+  end
 end
