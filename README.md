@@ -13,6 +13,12 @@ This approach may not work for all deployment scenarios, so please consider
 if this package is right for you. In the future, we will be providing an API
 version of this package.
 
+## Why?
+
+If your deployment scenario allows it, we believe this to be a powerful
+approach. This approach can be applied within your own network without being
+dependent on the uptime or connectivity of a third party service.
+
 ## Installation
 
 Add the `:haveibeenpwned` app to your dependencies in `mix.exs`
