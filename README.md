@@ -7,7 +7,7 @@ been pwned, as indicated by Troy Hunt's [Have I Been Pwned?](https://haveibeenpw
 We do not use the HIBP API to check passwords, this package takes a different 
 approach. Instead, we provide a downloadable binary file which is binary 
 searched near instantaneously at runtime. You can use this mix task to download 
-the file, which is ~9GB in size.
+the file, which is ~12GB in size.
 
 This approach may not work for all deployment scenarios, so please consider 
 if this package is right for you. In the future, we will be providing an API
@@ -39,9 +39,9 @@ The next step is to download the database. This can be done via a mix task.
 $ mix hibp.download
 ```
 
-The database is ~9GB in size and hosted in an S3 bucket located in Sydney,
+The database is ~12GB in size and hosted in an S3 bucket located in Sydney,
 Australia. In the future, we will provide an API version of this package for
-those who cannot deploy a 9GB dependency to production.
+those who cannot deploy a 12GB dependency to production.
 
 ## Usage
 
