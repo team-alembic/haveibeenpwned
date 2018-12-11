@@ -1,4 +1,5 @@
 # Have I Been Pwned?
+[![Build status](https://badge.buildkite.com/0fd47b708e0e4e4a9af17bb8986598c3ddc0b937037443d2a6.svg)](https://buildkite.com/alembic/have-i-been-pwned)
 
 An Elixir hex package allowing developers to check if a new user password has 
 been pwned, as indicated by Troy Hunt's [Have I Been Pwned?](https://haveibeenpwned.com/)
