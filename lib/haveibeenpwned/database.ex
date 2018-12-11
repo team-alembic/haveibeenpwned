@@ -38,7 +38,7 @@ defmodule Haveibeenpwned.Database do
     password_pwned?({0, entry_count()}, subject, original)
   end
 
-  defp password_pwned?({start, ed}, subject, original) when ed - start == 0 do
+  defp password_pwned?({start, last}, subject, original) when last - start == 0 do
     {:ok, <<sha::binary-size(20), count::32>>} = read_entry(start)
 
     if subject == sha do
@@ -48,8 +48,8 @@ defmodule Haveibeenpwned.Database do
     end
   end
 
-  defp password_pwned?({start, ed}, subject, original) when ed - start == 1 do
-    {:ok, <<sha::binary-size(20), count::32>>} = read_entry(ed)
+  defp password_pwned?({start, last}, subject, original) when last - start == 1 do
+    {:ok, <<sha::binary-size(20), count::32>>} = read_entry(last)
 
     if subject == sha do
       {:warning, count}
@@ -58,13 +58,13 @@ defmodule Haveibeenpwned.Database do
     end
   end
 
-  defp password_pwned?({start, ed}, subject, original) do
-    middle = start + round((ed - start) / 2)
+  defp password_pwned?({start, last}, subject, original) do
+    middle = start + round((last - start) / 2)
     {:ok, <<sha::binary-size(20), count::32>>} = read_entry(middle)
 
     cond do
       subject == sha -> {:warning, count}
-      subject > sha -> password_pwned?({middle, ed}, subject, original)
+      subject > sha -> password_pwned?({middle, last}, subject, original)
       subject < sha -> password_pwned?({start, middle}, subject, original)
     end
   end
@@ -73,7 +73,7 @@ defmodule Haveibeenpwned.Database do
   Hashes the supplied binary and returns it as a readable Base16 string
   """
   def hash_binary(binary) when is_binary(binary) do
-    :sha |> :crypto.hash(binary)
+    :crypto.hash(:sha, binary)
   end
 
   def hash_binary(_), do: raise(ArgumentError, "supplied argument must be a valid binary")
