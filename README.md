@@ -16,8 +16,8 @@ version of this package.
 ## Why?
 
 If your deployment scenario allows it, we believe this to be a powerful
-approach. This approach can be applied within your own network without being
-dependent on the uptime or connectivity of a third party service.
+approach as it can be applied within your own network without being dependent
+on the uptime or connectivity of a third party service.
 
 ## Installation
 
