@@ -61,6 +61,8 @@ iex(2)> Haveibeenpwned.Database.password_pwned?("unique password")
 {:ok, "unique_password"}
 ```
 
+## Examples
+
 This can be quite useful in a registration flow. For example, you might want
 to invalidate a User changeset if the supplied password is pwned
 
