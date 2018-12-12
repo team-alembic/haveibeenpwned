@@ -4,8 +4,6 @@ defmodule Haveibeenpwned.Database do
   """
   alias Haveibeenpwned.Database.IO
 
-  @database_entry_length 24
-
   @doc """
   Reads the specified portion of the haveibeenpwned hash database, beginning
   from `offset` and continuing up to the length of an entry
@@ -38,8 +36,8 @@ defmodule Haveibeenpwned.Database do
     password_pwned?({0, entry_count()}, subject, original)
   end
 
-  defp password_pwned?({start, last}, subject, original) when last - start == 0 do
-    {:ok, <<sha::binary-size(20), count::32>>} = read_entry(start)
+  defp password_pwned?({first, last}, subject, original) when last - first == 0 do
+    {:ok, <<sha::binary-size(20), count::32>>} = read_entry(first)
 
     if subject == sha do
       {:warning, count}
@@ -48,24 +46,24 @@ defmodule Haveibeenpwned.Database do
     end
   end
 
-  defp password_pwned?({start, last}, subject, original) when last - start == 1 do
+  defp password_pwned?({first, last}, subject, original) when last - first == 1 do
     {:ok, <<sha::binary-size(20), count::32>>} = read_entry(last)
 
     if subject == sha do
       {:warning, count}
     else
-      password_pwned?({start, start}, subject, original)
+      password_pwned?({first, first}, subject, original)
     end
   end
 
-  defp password_pwned?({start, last}, subject, original) do
-    middle = start + round((last - start) / 2)
+  defp password_pwned?({first, last}, subject, original) do
+    middle = first + round((last - first) / 2)
     {:ok, <<sha::binary-size(20), count::32>>} = read_entry(middle)
 
     cond do
       subject == sha -> {:warning, count}
       subject > sha -> password_pwned?({middle, last}, subject, original)
-      subject < sha -> password_pwned?({start, middle}, subject, original)
+      subject < sha -> password_pwned?({first, middle}, subject, original)
     end
   end
 
