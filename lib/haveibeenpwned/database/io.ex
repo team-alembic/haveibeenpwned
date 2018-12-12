@@ -8,7 +8,7 @@ defmodule Haveibeenpwned.Database.IO do
   @database_relative_path Application.get_env(:haveibeenpwned, :database_relative_path)
   @database_path Application.app_dir(:haveibeenpwned, @database_relative_path)
 
-  @database_entry_length 24
+  @database_entry_length 14
 
   @doc """
   Start the GenServer with a registered name
