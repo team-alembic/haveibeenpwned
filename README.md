@@ -5,8 +5,8 @@ An Elixir hex package allowing developers to check if a new user password has
 been pwned, as indicated by Troy Hunt's [Have I Been Pwned?](https://haveibeenpwned.com/)
 
 This package is designed to be deployed with your own binary searchable HIBP
-database. It does not communicate with the HIBP API. If you wish to simply use
-the HIBP API, you should [take a look at this package instead](https://github.com/thiamsantos/pwned)
+database. It does not communicate with the HIBP API. If you wish to use the 
+HIBP API, you should [take a look at this package instead](https://github.com/thiamsantos/pwned).
 
 If you would rather deploy your own database file and stay on your own network
 without having to rely on connectivity of a third party service, read on!
@@ -15,11 +15,11 @@ without having to rely on connectivity of a third party service, read on!
 
 We do not use the HIBP API to check passwords, this package takes a different 
 approach. Instead, we provide a downloadable binary file which is binary 
-searched near instantaneously at runtime. You can use this mix task to download 
+searched near instantaneously at runtime. We provide a mix task to download 
 the file, which is ~12GB in size.
 
-You can also download your own binary file for absolute security. See examples
-below for the `mix hibp.download` task.
+You can also download your own database file if you do not wish to use the one 
+we provide. See examples below in the Tasks section.
 
 This approach may not work for all deployment scenarios, so please consider 
 if this package is right for you.
@@ -28,7 +28,7 @@ if this package is right for you.
 
 If your deployment scenario allows it, we believe this to be a powerful
 approach as it can be applied within your own network without being dependent
-on the uptime or connectivity of a third party service.
+on the uptime of or connectivity to a third party service.
 
 ## Installation
 
