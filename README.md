@@ -18,9 +18,11 @@ approach. Instead, we provide a downloadable binary file which is binary
 searched near instantaneously at runtime. You can use this mix task to download 
 the file, which is ~12GB in size.
 
+You can also download your own binary file for absolute security. See examples
+below for the `mix hibp.download` task.
+
 This approach may not work for all deployment scenarios, so please consider 
-if this package is right for you. In the future, we will be providing an API
-version of this package.
+if this package is right for you.
 
 ## Why?
 
