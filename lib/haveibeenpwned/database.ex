@@ -83,7 +83,7 @@ defmodule Haveibeenpwned.Database do
     dest_stream = File.stream!(output_binary_path, [{:delayed_write, 10_000_000, 60}])
 
     input_txt_path
-    |> File.stream!
+    |> File.stream!()
     |> Stream.map(&format_line(&1))
     |> Stream.into(dest_stream)
     |> Stream.run()
