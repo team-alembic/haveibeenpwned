@@ -4,6 +4,15 @@
 An Elixir hex package allowing developers to check if a new user password has 
 been pwned, as indicated by Troy Hunt's [Have I Been Pwned?](https://haveibeenpwned.com/)
 
+This package is designed to be deployed with your own binary searchable HIBP
+database. It does not communicate with the HIBP API. If you wish to simply use
+the HIBP API, you should [take a look at this package instead](https://github.com/thiamsantos/pwned)
+
+If you would rather deploy your own database file and stay on your own network
+without having to rely on connectivity of a third party service, read on!
+
+## Introduction
+
 We do not use the HIBP API to check passwords, this package takes a different 
 approach. Instead, we provide a downloadable binary file which is binary 
 searched near instantaneously at runtime. You can use this mix task to download 
