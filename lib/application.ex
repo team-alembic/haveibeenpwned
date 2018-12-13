@@ -1,8 +1,6 @@
 defmodule Haveibeenpwned.Application do
   @moduledoc false
-  """
-  Defines the OTP application behaviour of :haveibeenpwned
-  """
+
   use Application
 
   def start(_type, _args) do

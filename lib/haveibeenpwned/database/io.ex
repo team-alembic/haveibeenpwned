@@ -10,6 +10,8 @@ defmodule Haveibeenpwned.Database.IO do
 
   @database_entry_length 14
 
+  ### Client API
+
   @doc """
   Start the GenServer with a registered name
   """
@@ -17,7 +19,19 @@ defmodule Haveibeenpwned.Database.IO do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
-  @impl true
+  @doc """
+  Reads the specified portion of the haveibeenpwned hash database, beginning
+  from `offset` and continuing up to the length of an entry
+  """
+  def read_entry(entry_number), do: GenServer.call(__MODULE__, {:read_entry, entry_number})
+
+  @doc """
+  Return the entry count
+  """
+  def entry_count, do: GenServer.call(__MODULE__, :entry_count)
+
+  ### GenServer API
+
   @doc """
   Start the GenServer, saving state as the file handle
   """
@@ -28,7 +42,6 @@ defmodule Haveibeenpwned.Database.IO do
     {:ok, {file, entry_count}}
   end
 
-  @impl true
   @doc """
   Reads a portion from the database
   """
@@ -39,20 +52,12 @@ defmodule Haveibeenpwned.Database.IO do
     {:reply, entry, {file, entry_count}}
   end
 
-  @impl true
-  @doc """
-  Allow outside processes to fetch the file handle
-  """
-  def handle_call(:database_handle, _from, state), do: {:reply, state, state}
-
-  @impl true
   @doc """
   Return entry_count
   """
   def handle_call(:entry_count, _from, {file, entry_count}),
     do: {:reply, entry_count, {file, entry_count}}
 
-  @impl true
   @doc """
   Close the file handle when server is shutting down
   """
