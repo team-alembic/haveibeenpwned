@@ -1,8 +1,6 @@
 defmodule Haveibeenpwned.Database.IO do
-  @moduledoc """
-  A GenServer which keeps the SHA database open for access. State is the file
-  handle
-  """
+  @moduledoc false
+
   use GenServer
 
   @database_relative_path Application.get_env(:haveibeenpwned, :database_relative_path)
