@@ -16,7 +16,7 @@ without having to rely on connectivity of a third party service, read on!
 We do not use the HIBP API to check passwords, this package takes a different 
 approach. Instead, we provide a downloadable binary file which is binary 
 searched near instantaneously at runtime. We provide a mix task to download 
-the file, which is ~12GB in size.
+the file, which is ~7.2GB in size.
 
 You can also download your own database file if you do not wish to use the one 
 we provide. See examples below in the Tasks section.
@@ -50,9 +50,9 @@ The next step is to download the database. This can be done via a mix task.
 $ mix hibp.download
 ```
 
-The database is ~12GB in size and hosted in an S3 bucket located in Sydney,
+The database is ~7.2GB in size and hosted in an S3 bucket located in Sydney,
 Australia. In the future, we will provide an API version of this package for
-those who cannot deploy a 12GB dependency to production.
+those who cannot deploy a 7.2GB dependency to production.
 
 ## Usage
 
@@ -71,6 +71,13 @@ password
 iex(2)> Haveibeenpwned.Database.password_pwned?("unique password")
 {:ok, "unique_password"}
 ```
+
+## Anout database
+
+Binary database is converted from SHA-1 Version 3(ordered by hash) text file(22.79GB)
+into binary file(12.41GB). By truncating SHAs in half, the file size have been decreased
+further(7.2GB). It will increate the chance of a false positive by a very small margin,
+but will never produce a false negative result.
 
 ## Examples
 
