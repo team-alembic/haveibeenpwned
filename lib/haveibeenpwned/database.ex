@@ -8,25 +8,11 @@ defmodule Haveibeenpwned.Database do
   @count_bit_size 32
 
   @doc """
-  Reads the specified portion of the haveibeenpwned hash database, beginning
-  from `offset` and continuing up to the length of an entry
-  """
-  def read_entry(number) when is_integer(number) do
-    GenServer.call(IO, {:read_entry, number})
-  end
-
-  @doc """
-  Return the entry count
-  """
-  def entry_count do
-    GenServer.call(IO, :entry_count)
-  end
-
-  @doc """
   Searches the Haveibeenpwned database for matching hashes via a binary search.
   If the supplied password is compromised, returns a `{:warning, count}` tuple.
   If it is not compromised, returns an `{:ok, password}` tuple.
   """
+  @spec password_pwned?(String.t()) :: {:ok, String.t()} | {:error, number}
   def password_pwned?(password) when is_binary(password) do
     password |> hash_binary() |> significant_hash() |> password_pwned?(password)
   end
@@ -70,7 +56,25 @@ defmodule Haveibeenpwned.Database do
     end
   end
 
-  @doc """
+  @doc false
+  """
+  Reads the specified portion of the haveibeenpwned hash database, beginning
+  from `offset` and continuing up to the length of an entry
+  """
+  def read_entry(number) when is_integer(number) do
+    GenServer.call(IO, {:read_entry, number})
+  end
+
+  @doc false
+  """
+  Return the entry count
+  """
+  def entry_count do
+    GenServer.call(IO, :entry_count)
+  end
+
+  @doc false
+  """
   Hashes the supplied binary and returns it as a readable Base16 string
   """
   def hash_binary(binary) when is_binary(binary) do
