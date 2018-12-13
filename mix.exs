@@ -1,13 +1,16 @@
 defmodule Haveibeenpwned.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+
   def project do
     [
       app: :haveibeenpwned,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.7.4",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      docs: docs()
     ]
   end
 
@@ -20,7 +23,18 @@ defmodule Haveibeenpwned.MixProject do
   defp deps do
     [
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
-      {:download, "~> 0.0.4"}
+      {:download, "~> 0.0.4"},
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
+    ]
+  end
+
+  defp docs() do
+    [
+      main: "readme",
+      source_ref: "v#{@version}",
+      canonical: "http://hexdocs.pm/haveibeenpwned",
+      source_url: "https://github.com/team-alembic/haveibeenpwned",
+      extras: ["README.md"]
     ]
   end
 end
