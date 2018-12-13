@@ -21,8 +21,8 @@ defmodule Mix.Tasks.Hibp.Download do
       Download.from(
         @binary_download_url,
         path: @binary_disk_path,
-        # 13G
-        max_file_size: 1024 * 1024 * 1000 * 13
+        # 7.5G
+        max_file_size: 1024 * 1024 * 1000 * 7.5
       )
 
     Logger.info("Binary HIBP file has been downloaded in #{stored_file_path}")
@@ -48,7 +48,7 @@ defmodule Mix.Tasks.Hibp.ConvertTextFile do
   def run([""]), do: raise(ArgumentError, @error_message)
 
   def run([path]) do
-    dest_stream = File.stream!(@binary_disk_path, [:delayed_write])
+    dest_stream = File.stream!(@binary_disk_path, [{:delayed_write, 10_000_000, 60}])
 
     path
     |> File.stream!()
