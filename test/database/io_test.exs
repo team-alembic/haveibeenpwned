@@ -18,28 +18,31 @@ defmodule Haveibeenpwned.Database.IOTest do
     end
   end
 
-  describe "Haveibeenpwned.Database.IO.handle_call/3" do
+  describe "Haveibeenpwned.Database.IO.read_entry/1" do
     test "reads and entry of a specific offset and length" do
-      {:ok, bytes} = GenServer.call(IO, {:read_entry, 1})
+      {:ok, bytes} = IO.read_entry(1)
+      assert <<4, 5, 58, 123, 138, 105, 87, 130, 42, 26, 0, 0, 0, 187>> == bytes
+      {sha_str, count} = decode_binary_record(bytes)
+      assert "04053A7B8A6957822A1A" == sha_str
+      assert 187 = count
 
-      assert <<4, 5, 58, 123, 138, 105, 87, 130, 42, 26, 16, 100, 28, 9, 74, 240, 74, 220, 7, 30,
-               0, 0, 0, 187>> == bytes
-
-      {:ok, bytes} = GenServer.call(IO, {:read_entry, 2})
-
-      assert <<17, 174, 226, 73, 23, 62, 136, 125, 51, 27, 24, 120, 8, 12, 43, 248, 213, 156, 196,
-               48, 0, 0, 0, 2>> == bytes
+      {:ok, bytes} = IO.read_entry(2)
+      assert <<17, 174, 226, 73, 23, 62, 136, 125, 51, 27, 0, 0, 0, 2>> == bytes
+      {sha_str, count} = decode_binary_record(bytes)
+      assert "11AEE249173E887D331B" == sha_str
+      assert 2 == count
     end
+  end
 
-    test "allows retrieval of the database file process" do
-      {pid, entry_count} = GenServer.call(IO, :database_handle)
-      assert Process.alive?(pid)
-      assert entry_count == 10
-    end
-
+  describe "Haveibeenpwned.Database.IO.entry_count/0" do
     test "get entry count" do
-      entry_count = GenServer.call(IO, :entry_count)
-      assert entry_count == 10
+      assert IO.entry_count() == 10
     end
+  end
+
+  def decode_binary_record(bytes) do
+    <<sha::binary-size(10), count::32>> = bytes
+    sha_str = Base.encode16(sha, case: :upper)
+    {sha_str, count}
   end
 end
