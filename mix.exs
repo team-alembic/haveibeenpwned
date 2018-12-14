@@ -23,7 +23,7 @@ defmodule Haveibeenpwned.MixProject do
   defp deps do
     [
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
-      {:download, "~> 0.0.4"},
+      {:download, "~> 0.0.4", github: "lukerollans/download"},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
   end
