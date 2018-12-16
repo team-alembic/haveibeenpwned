@@ -10,7 +10,10 @@ defmodule Haveibeenpwned.MixProject do
       elixir: "~> 1.7.4",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      docs: docs()
+      docs: docs(),
+      description: description(),
+      package: package(),
+      source_url: "https://github.com/team-alembic/haveibeenpwned"
     ]
   end
 
@@ -35,6 +38,17 @@ defmodule Haveibeenpwned.MixProject do
       canonical: "http://hexdocs.pm/haveibeenpwned",
       source_url: "https://github.com/team-alembic/haveibeenpwned",
       extras: ["README.md"]
+    ]
+  end
+
+  defp description() do
+    "Elixir package to check passwords against Troy Hunts haveibeenpwned database locally"
+  end
+
+  defp package() do
+    [
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/team-alembic/haveibeenpwned"}
     ]
   end
 end
