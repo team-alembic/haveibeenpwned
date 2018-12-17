@@ -45,17 +45,60 @@ def deps do
 end
 ```
 
-## Setup
+## Setup - Using the provided binary database
 
-The next step is to download the database. This can be done via a mix task.
+If you're happy to use the binary database we provide, setup is only a single
+step. You can use the `mix hibp.download` mix task to download it, and it will
+be saved in the correct location.
 
 ```bash
 $ mix hibp.download
 ```
 
-The database is ~7.2GB in size and hosted in an S3 bucket located in Sydney,
+The provided database is ~7.2GB in size and hosted in an S3 bucket located in Sydney,
 Australia. In the future, we will provide an API version of this package for
 those who cannot deploy a 7.2GB dependency to production.
+
+## Setup - Using your own binary database
+
+If you would prefer to use your own binary database for security reasons, that's
+fine too! We provide some config and mix tasks to make this easy.
+
+NOTE: If you have previously generated your own binary, you don't need to
+generate it every time. You can simply use the `mix hibp.download` mix task
+and point it at your own binary via the following config
+
+```
+config :haveibeenpwned, binary_download_url: "https://your-binary.com/binary"
+```
+
+Once you run `mix hibp.download`, your own binary will be downloaded instead of
+the binary we provide.
+
+#### 1. Download text database
+
+You can download the text database via the following mix task
+
+```
+mix hibp.text.download
+```
+
+This will download a 7z archive containing Troy Hunt's database, and extract
+the archive to plain text. The result is a `pwned-passwords-ordered-by-bash.txt`
+file location in `priv` by default.
+
+#### 2. Convert text database to binary
+
+The next step is to convert the plain text database to a binary format. You can
+do this via another mix task
+
+```
+mix hibp.text.convert --path /path/to/pwned-passwords-ordered-by-hash.txt
+```
+
+NOTE: It is recommend you do this once, or whenever Troy Hunt releases a new
+version of the database. You should upload your binary to the internet or your
+intranet, and use the `mix hibp.download` task to download your own binary.
 
 ## Usage
 
