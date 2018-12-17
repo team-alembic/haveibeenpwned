@@ -56,8 +56,7 @@ $ mix hibp.download
 ```
 
 The provided database is ~7.2GB in size and hosted in an S3 bucket located in Sydney,
-Australia. In the future, we will provide an API version of this package for
-those who cannot deploy a 7.2GB dependency to production.
+Australia.
 
 ## Setup - Using your own binary database
 
