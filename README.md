@@ -113,16 +113,19 @@ When a password has not been pwned, you'll receive an ok tuple with the original
 password
 
 ```elixir
-iex(2)> Haveibeenpwned.Database.password_pwned?("unique password")
-{:ok, "unique_password"}
+iex(2)> Haveibeenpwned.Database.password_pwned?("AC9BB1EE-7AEF-4EBD-860E-34695CCD4AE2")
+{:ok, "AC9BB1EE-7AEF-4EBD-860E-34695CCD4AE2"}
 ```
 
-## Anout database
+## About database
 
-Binary database is converted from SHA-1 Version 3(ordered by hash) text file(22.79GB)
-into binary file(12.41GB). By truncating SHAs in half, the file size have been decreased
-further(7.2GB). It will increate the chance of a false positive by a very small margin,
-but will never produce a false negative result.
+The binary database we operate on is converted from Troy Hunt's textual SHA-1
+database (ordered by hash) which is 22.79GB at time of writing. The resultant
+binary database is 7.2GB at time of writing.
+
+The binary database only stores half of each password SHA to save space. This
+means there is a very, very small chance of a false positive but it will
+never produce a false negative.
 
 ## Examples
 
