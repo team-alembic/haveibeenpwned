@@ -5,6 +5,9 @@
 # Use a minial Elixir  image
 FROM elixir:1.7.4-alpine
 
+# Install git
+RUN apk --update --no-cache add git
+
 # Configure workspace
 RUN mix local.hex --force
 RUN mix local.rebar --force
