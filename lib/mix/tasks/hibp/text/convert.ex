@@ -38,7 +38,8 @@ defmodule Mix.Tasks.Hibp.Text.Convert do
   def run([]), do: empty_message()
   def run([""]), do: empty_message()
 
-  def run([path]) do
+  def run(["--path", path]) do
+    Logger.info("Starting conversion of text database to binary database. This will take a while.")
     dest_stream = File.stream!(@binary_disk_path, [{:delayed_write, 10_000_000, 60}])
 
     path
