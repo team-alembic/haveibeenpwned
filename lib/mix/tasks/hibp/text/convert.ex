@@ -16,7 +16,7 @@ defmodule Mix.Tasks.Hibp.Text.Convert do
   ## Example usage
 
   ```
-  mix hibp.text.convert --path /absolute/path/hibp_database.text
+  mix hibp.text.convert --path /absolute/path/pwned-passwords-ordered-by-hash.text
   ```
 
   The resultant binary fire will be saved to the default binary file path,

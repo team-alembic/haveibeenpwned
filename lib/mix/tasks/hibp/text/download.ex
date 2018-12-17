@@ -12,16 +12,27 @@ defmodule Mix.Tasks.Hibp.Text.Download do
   mix hibp.text.download
   ```
 
-  If the download is succesful, the text database file can be found at
-  `priv/hibp_text.txt` relative to your application
+  Once the 7z archive is downloaded, the plain text file is extracted to
+  `priv/pwned-passwords-ordered-by-hash.txt`
 
-  Once downloaded, you should use `mix hibp.text.convert` to convert it to
-  a binary format
+  By default, this mix task expects the `7z` binary to be available in `$PATH`
+  and uses it to extract the plain text file. If you would like to specify
+  your own extraction command, use the below config
+
+  ```
+  config :haveibeenpwned, decompress_command: "your-command"
+  ```
+
+  Once the text database has been downloaded and extracted, you should use
+  `mix hibp.text.convert --path /path/to/pwned-passwords-ordered-by-hash.txt`
+  to convert it to a binary format.
   """
 
   @download_url "https://downloads.pwnedpasswords.com/passwords/pwned-passwords-ordered-by-hash.7z"
   @save_path Application.app_dir(:haveibeenpwned, "priv/hibp_text")
-  @extract_command Application.get_env(:haveibeenpwned, :decompress_command) || "7z"
+
+  @default_extract_command "7z e #{@save_path}"
+  @extract_command Application.get_env(:haveibeenpwned, :decompress_command) || @default_extract_command
 
   @doc false
   def run(_) do

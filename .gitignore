@@ -28,6 +28,7 @@ haveibeenpwned-*.tar
 # Ignore database files
 priv/hibp_text
 priv/hibp_binary
+priv/pwned-passwords-ordered-by-hash.txt
 
 # MacOS files
 .DS_Store
