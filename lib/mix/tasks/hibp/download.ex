@@ -30,7 +30,7 @@ defmodule Mix.Tasks.Hibp.Download do
            path: @binary_disk_path,
            max_file_size: 13_631_488_000
          ) do
-      {:ok, path} -> Logger.info("Successfully downloaded to #{path}")
+      {:ok, path} -> Logger.info("Successfully downloaded binary database to #{path}")
       {:error, :eexist} -> Logger.info("Binary already exists")
       _ -> Logger.error("An error occured when downloading")
     end
