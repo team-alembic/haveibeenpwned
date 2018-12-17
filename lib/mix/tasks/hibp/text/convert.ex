@@ -53,7 +53,7 @@ defmodule Mix.Tasks.Hibp.Text.Convert do
     )
   end
 
-  def format_line(line) do
+  defp format_line(line) do
     pattern = :binary.compile_pattern(["\n", ":"])
     [sha_str, count_str] = String.split(line, pattern, trim: true)
     {:ok, <<significant_sha::binary-size(10), _ignore::binary-size(10)>>} = Base.decode16(sha_str)
