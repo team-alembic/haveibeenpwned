@@ -47,7 +47,7 @@ defmodule Mix.Tasks.Hibp.Text.Download do
     end
   end
 
-  defp extract_text_database() do
+  defp extract_text_database do
     Logger.info("Beginning extraction...")
     :os.cmd(@extract_command)
     Logger.info("Finished extraction")
