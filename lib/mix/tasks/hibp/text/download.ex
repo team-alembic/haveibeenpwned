@@ -20,15 +20,17 @@ defmodule Mix.Tasks.Hibp.Text.Download do
   """
 
   @download_url "https://downloads.pwnedpasswords.com/passwords/pwned-passwords-ordered-by-hash.7z"
+  @save_path Application.app_dir(:haveibeenpwned, "priv/hibp_text")
+  @extract_command Application.get_env(:haveibeenpwned, :decompress_command) || "7z"
 
   @doc false
   def run(_) do
     {:ok, _} = Application.ensure_all_started(:download)
 
-    case Download.from(@download_url, path: @download_url, max_file_size: 13_631_488_000) do
+    case Download.from(@download_url, path: @save_path, max_file_size: 10_000_000_000) do
       {:ok, path} -> Logger.info("Successfully downloaded text database to #{path}")
       {:error, :eexist} -> Logger.info("Text database already exists")
-      _ -> Logger.error("An error occured when downloading")
+      _ -> Logger.error("An unknown error occured while downloading")
     end
   end
 end
