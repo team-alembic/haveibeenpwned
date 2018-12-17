@@ -31,7 +31,7 @@ defmodule Mix.Tasks.Hibp.Text.Download do
   @download_url "https://downloads.pwnedpasswords.com/passwords/pwned-passwords-ordered-by-hash.7z"
   @save_path Application.app_dir(:haveibeenpwned, "priv/hibp_text")
 
-  @default_extract_command "7z e #{@save_path}"
+  @default_extract_command '7z e #{@save_path} -opriv'
   @extract_command Application.get_env(:haveibeenpwned, :decompress_command) || @default_extract_command
 
   @doc false
@@ -39,9 +39,17 @@ defmodule Mix.Tasks.Hibp.Text.Download do
     {:ok, _} = Application.ensure_all_started(:download)
 
     case Download.from(@download_url, path: @save_path, max_file_size: 10_000_000_000) do
-      {:ok, path} -> Logger.info("Successfully downloaded text database to #{path}")
+      {:ok, path} ->
+        Logger.info("Successfully downloaded text database archive to #{path}")
+        extract_text_database()
       {:error, :eexist} -> Logger.info("Text database already exists")
       _ -> Logger.error("An unknown error occured while downloading")
     end
+  end
+
+  defp extract_text_database() do
+    Logger.info("Beginning extraction...")
+    :os.cmd(@extract_command)
+    Logger.info("Finished extraction")
   end
 end
